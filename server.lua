@@ -63,25 +63,25 @@ function vRPbs.GetMoneyStatus(userid)
 		end
 	end
 	if BankCheck == true then
-		if useroldbmoney == nil then
-			useroldbmoney = bankmoney
-		elseif useroldbmoney ~= nil then
-			if bankmoney ~= nil and canGiveMoney == false then
-				local difference = bankmoney - useroldbmoney
-				if useroldbmoney ~= walletmoney then
-					if bankmoney > (useroldbmoney + moddedbMoney) then
+		if useroldbmoney[user_id] == nil then
+			useroldbmoney[user_id] = bankmoney[user_id]
+		elseif useroldbmoney[user_id] ~= nil then
+			if bankmoney[user_id] ~= nil and canGiveMoney == false then
+				local difference = bankmoney[user_id] - useroldbmoney[user_id]
+				if useroldbmoney[user_id] ~= walletmoney[user_id] then
+					if bankmoney[user_id] > (useroldbmoney[user_id] + moddedbMoney) then
 						print("UserID: " ..user_id.. " Has received more than "..moddedbMoney.." in <5 seconds. Old Bank: " ..useroldbmoney.. " New Bank: " ..bankmoney.. " Value: $" ..difference)
 						if useDiscord == true then
 							if kickorban == "ban" then
 								vRP.getUserIdentity({user_id, function(identity)
-									local newmessage = "UserID: " ..user_id.. " Has received more than "..moddedbMoney.." in Bank Money in <5 seconds. Old Wallet: $" ..useroldbmoney.. " New Bank: $" ..bankmoney.. " Value: $" ..difference.. " and was automatically banned. @everyone"
+									local newmessage = "UserID: " ..user_id.. " Has received more than "..moddedbMoney.." in Bank Money in <5 seconds. Old Wallet: $" ..useroldbmoney[user_id].. " New Bank: $" ..bankmoney[user_id].. " Value: $" ..difference.. " and was automatically banned. @everyone"
 									PerformHttpRequest('INPUT LINK HERE', function(err, text, headers) end, 'POST', json.encode({username = identity.firstname.. " " ..identity.name , content = newmessage}), { ['Content-Type'] = 'application/json' })
 									vRP.ban({source,"UserID: " ..user_id.. " was banned for modding money. Value: $" ..difference})
 								end})
 							end
 							if kickorban == "kick" then
 								vRP.getUserIdentity({user_id, function(identity)
-									local newmessage = "UserID: " ..user_id.. " Has received more than "..moddedbMoney.." in Bank Money in <5 seconds. Old Wallet: $" ..useroldbmoney.. " New Bank: $" ..bankmoney.. " Value: $" ..difference.. " and was automatically kicked. @everyone"
+									local newmessage = "UserID: " ..user_id.. " Has received more than "..moddedbMoney.." in Bank Money in <5 seconds. Old Wallet: $" ..useroldbmoney[user_id].. " New Bank: $" ..bankmoney[user_id].. " Value: $" ..difference.. " and was automatically kicked. @everyone"
 									PerformHttpRequest('INPUT LINK HERE', function(err, text, headers) end, 'POST', json.encode({username = identity.firstname.. " " ..identity.name , content = newmessage}), { ['Content-Type'] = 'application/json' })
 									vRP.kick({source,"UserID: " ..user_id.. " was kicked for modding money. Value: $" ..difference})
 								end})
@@ -95,7 +95,7 @@ function vRPbs.GetMoneyStatus(userid)
 						end
 					end
 				end	
-				useroldbmoney = bankmoney
+				useroldbmoney[user_id] = bankmoney[user_id]
 			end
 		end
 	end
